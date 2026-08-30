@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /app2/
+Disallow: /api/
+Disallow: */page/*
+Disallow: *?sort=*
+Disallow: *?filter=*
+
+User-agent: GPTBot
+Allow: /
+Disallow: /admin/
+Disallow: /app2/
+
+User-agent: ChatGPT-User
+Allow: /
+
+Sitemap: https://demos.raudie.net/sitemap.xml

@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block title %}Propiedades | CRM Inmobiliario{% endblock %}
+{% block page_title %}Inventario de Propiedades{% endblock %}
+
+{% block content %}
+<div class="glass-card">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="fw-bold mb-0">Listado de Propiedades</h5>
+        <button class="btn btn-primary-custom" onclick="openPropiedadModal()">
+            <i class="fas fa-plus"></i> Nueva Propiedad
+        </button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-custom align-middle">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Operación</th>
+                    <th>Tipo</th>
+                    <th>Precio</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for propiedad in propiedades %}
+                <tr>
+                    <td class="fw-semibold">{{ propiedad.titulo }}<br>
+                        <small class="text-muted fw-normal"><i class="fas fa-map-marker-alt"></i> {{ propiedad.zona }}</small>
+                    </td>
+                    <td>{{ propiedad.tipo_operacion }}</td>
+                    <td>{{ propiedad.tipo_inmueble }}</td>
+                    <td>${{ propiedad.precio }}</td>
+                    <td>
+                        {% if propiedad.estado == 'Disponible' %}
+                            <span class="badge bg-success">Disponible</span>
+                        {% elif propiedad.estado == 'Reservada' %}
+                            <span class="badge bg-warning text-dark">Reservada</span>
+                        {% else %}
+                            <span class="badge bg-danger">Vendida</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <button onclick="openPropiedadModal({{ propiedad.pk }})" class="btn btn-sm btn-light border" title="Editar">
+                                <i class="fas fa-edit text-primary"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-muted">No hay propiedades registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="propiedadModal" tabindex="-1" aria-labelledby="propiedadModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="propiedadModalLabel">Gestionar Propiedad</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="propiedadModalBody">
+        <div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" form="propiedadAjaxForm" class="btn btn-primary-custom"><i class="fas fa-save"></i> Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    let currentPropModal = null;
+    function openPropiedadModal(pk) {
+        if (!currentPropModal) {
+            currentPropModal = new bootstrap.Modal(document.getElementById('propiedadModal'));
+        }
+        const body = document.getElementById('propiedadModalBody');
+        body.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div></div>';
+        currentPropModal.show();
+        
+        const url = pk ? `/app2/api/propiedad/${pk}/editar/` : `/app2/api/propiedad/crear/`;
+        
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                body.innerHTML = data.html;
+                const form = document.getElementById('propiedadAjaxForm');
+                form.setAttribute('action', url);
+                
+                // Ejecutar scripts dentro del html inyectado si los hay
+                const scripts = body.getElementsByTagName('script');
+                for (let i = 0; i < scripts.length; i++) {
+                    const newScript = document.createElement("script");
+                    if(scripts[i].src) {
+                        newScript.src = scripts[i].src;
+                        newScript.onload = () => {
+                            if (i === scripts.length - 1) {
+                                // This is a hacky way to wait for Sortable to load before eval, but SortableJS is loaded synchronously via CDN
+                                // In a robust app, we'd bundle it or await its load
+                            }
+                        }
+                    } else {
+                        newScript.text = scripts[i].innerText;
+                    }
+                    document.body.appendChild(newScript).parentNode.removeChild(newScript);
+                }
+            })
+            .catch(err => {
+                body.innerHTML = '<div class="alert alert-danger">Error al cargar formulario.</div>';
+            });
+    }
+</script>
+{% endblock %}

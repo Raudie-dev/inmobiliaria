@@ -1,0 +1,20 @@
+# Sobre Nosotros
+Somos una inmobiliaria líder enfocada en conectar personas con sus hogares ideales a través de un servicio de atención rápida, transparente y eficiente.
+
+## Misión
+Proveer a nuestros clientes de las mejores opciones inmobiliarias (venta y alquiler) en las zonas de mayor crecimiento y plusvalía, acompañando el proceso de punta a punta.
+
+## Servicios Principales
+1. **Compra y Venta de Propiedades**: Gestión integral para compradores y vendedores con matching inteligente.
+2. **Alquileres**: Amplio catálogo de departamentos y casas para estadías largas.
+3. **Asesoría Legal Inmobiliaria**: Soporte para redacción de contratos, análisis de títulos y firmas.
+4. **Tasaciones Rápidas**: Valoración precisa basada en big data del mercado local.
+
+## Información de Contacto
+- **Sitio Web**: https://demos.raudie.net
+- **Ubicación**: Sede Principal.
+- **Enfoque**: Modernidad, velocidad de respuesta y fiabilidad.
+
+## Enlaces Útiles
+- Catálogo de Propiedades: /propiedades
+- Contacto y Soporte: /contacto

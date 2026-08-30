@@ -1,0 +1,264 @@
+<style>
+    .gallery-preview {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+    }
+    .gallery-item {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        border: 2px solid transparent;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: grab;
+    }
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .gallery-item.is-cover {
+        border-color: #2563EB;
+    }
+    .gallery-item .cover-badge {
+        display: none;
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        background: #2563EB;
+        color: white;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+    .gallery-item.is-cover .cover-badge {
+        display: block;
+    }
+    .gallery-item .delete-btn {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        background: rgba(255,0,0,0.8);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .dropzone-area {
+        border: 2px dashed #ccc;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        background: #f8f9fa;
+    }
+    .dropzone-area:hover {
+        background: #e9ecef;
+    }
+</style>
+
+<form id="propiedadAjaxForm" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row g-3">
+        {% for field in form %}
+        <div class="col-md-6 mb-2">
+            <label for="{{ field.id_for_label }}" class="form-label fw-semibold text-muted small">{{ field.label }}</label>
+            {{ field }}
+            <div class="text-danger small" id="error_{{ field.name }}"></div>
+        </div>
+        {% endfor %}
+        
+        <div class="col-12 mt-3">
+            <h6 class="fw-bold">Galería de Imágenes</h6>
+            <p class="text-muted small mb-2">Arrastra imágenes o haz clic para subir. Arrastra las miniaturas para reordenar y haz clic en una para hacerla portada.</p>
+            
+            <div class="dropzone-area" id="dropzoneArea">
+                <i class="fas fa-cloud-upload-alt fs-2 text-primary mb-2"></i>
+                <p class="mb-0">Clic o arrastra aquí para subir imágenes</p>
+                <input type="file" id="imagenesInput" multiple accept="image/*" class="d-none">
+            </div>
+            
+            <div class="gallery-preview" id="galleryPreview">
+                <!-- Se llenará vía JS -->
+            </div>
+            <input type="hidden" name="imagenes_data" id="imagenesData">
+        </div>
+    </div>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<script>
+    document.querySelectorAll('#propiedadAjaxForm input:not([type="file"]), #propiedadAjaxForm select, #propiedadAjaxForm textarea').forEach(input => {
+        if (input.type === 'checkbox') {
+            input.classList.add('form-check-input');
+            input.parentElement.classList.add('form-check');
+        } else if (input.tagName === 'SELECT') {
+            input.classList.add('form-select');
+        } else if (input.type !== 'radio') {
+            input.classList.add('form-control');
+        }
+    });
+
+    // Gallery Logic
+    let existingImages = {{ imagenes_existentes|safe|default:"[]" }};
+    let newFiles = [];
+    const previewContainer = document.getElementById('galleryPreview');
+    
+    function renderGallery() {
+        previewContainer.innerHTML = '';
+        
+        existingImages.forEach(img => {
+            previewContainer.insertAdjacentHTML('beforeend', `
+                <div class="gallery-item ${img.es_portada ? 'is-cover' : ''}" data-id="${img.id}">
+                    <span class="cover-badge"><i class="fas fa-star"></i></span>
+                    <button type="button" class="delete-btn" onclick="deleteExisting(${img.id})"><i class="fas fa-times"></i></button>
+                    <img src="${img.url}" onclick="setCover(this)">
+                </div>
+            `);
+        });
+
+        newFiles.forEach((fileObj, index) => {
+            previewContainer.insertAdjacentHTML('beforeend', `
+                <div class="gallery-item ${fileObj.es_portada ? 'is-cover' : ''}" data-index="${index}">
+                    <span class="cover-badge"><i class="fas fa-star"></i></span>
+                    <button type="button" class="delete-btn" onclick="deleteNew(${index})"><i class="fas fa-times"></i></button>
+                    <img src="${fileObj.preview}" onclick="setCover(this)">
+                </div>
+            `);
+        });
+        updateImagenesData();
+    }
+
+    function setCover(imgEl) {
+        const item = imgEl.closest('.gallery-item');
+        document.querySelectorAll('.gallery-item').forEach(el => el.classList.remove('is-cover'));
+        item.classList.add('is-cover');
+        
+        // Update arrays
+        const existingId = item.dataset.id;
+        const newIndex = item.dataset.index;
+        
+        existingImages.forEach(img => img.es_portada = false);
+        newFiles.forEach(f => f.es_portada = false);
+        
+        if (existingId) {
+            const match = existingImages.find(i => i.id == existingId);
+            if(match) match.es_portada = true;
+        } else if (newIndex !== undefined) {
+            newFiles[newIndex].es_portada = true;
+        }
+        updateImagenesData();
+    }
+
+    function deleteExisting(id) {
+        if(confirm("¿Eliminar esta imagen?")) {
+            fetch(`/app2/api/imagen/${id}/eliminar/`, {
+                method: 'POST',
+                headers: {'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value}
+            }).then(() => {
+                existingImages = existingImages.filter(i => i.id != id);
+                renderGallery();
+            });
+        }
+    }
+
+    function deleteNew(index) {
+        newFiles.splice(index, 1);
+        renderGallery();
+    }
+
+    function updateImagenesData() {
+        // Obtenemos el orden actual desde el DOM
+        const items = document.querySelectorAll('.gallery-item');
+        let data = [];
+        items.forEach((item, index) => {
+            const existingId = item.dataset.id;
+            const es_portada = item.classList.contains('is-cover');
+            if (existingId) {
+                data.push({ id: existingId, orden: index, es_portada: es_portada });
+            }
+        });
+        document.getElementById('imagenesData').value = JSON.stringify(data);
+    }
+
+    // Initialize Sortable
+    new Sortable(previewContainer, {
+        animation: 150,
+        onEnd: function() {
+            updateImagenesData();
+        }
+    });
+
+    // File Drop logic
+    const dropzone = document.getElementById('dropzoneArea');
+    const input = document.getElementById('imagenesInput');
+
+    dropzone.addEventListener('click', () => input.click());
+    
+    input.addEventListener('change', handleFiles);
+    dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.style.background = '#e9ecef'; });
+    dropzone.addEventListener('dragleave', () => dropzone.style.background = '#f8f9fa');
+    dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.style.background = '#f8f9fa';
+        handleFiles({ target: { files: e.dataTransfer.files } });
+    });
+
+    function handleFiles(e) {
+        const files = Array.from(e.target.files);
+        files.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                newFiles.push({
+                    file: file,
+                    preview: evt.target.result,
+                    es_portada: existingImages.length === 0 && newFiles.length === 0 // Primera es portada por defecto
+                });
+                renderGallery();
+            };
+            reader.readAsDataURL(file);
+        });
+        input.value = '';
+    }
+
+    renderGallery();
+</script>
+<script>
+    document.getElementById('propiedadAjaxForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        
+        // Append all new files to formData
+        newFiles.forEach(f => {
+            formData.append('imagenes_galeria', f.file);
+        });
+
+        const url = this.getAttribute('action');
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+            headers: {'X-Requested-With': 'XMLHttpRequest'}
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                // Render errors
+                document.querySelectorAll('.text-danger').forEach(el => el.innerHTML = '');
+                for (const field in data.errors) {
+                    const errEl = document.getElementById('error_' + field);
+                    if (errEl) errEl.innerHTML = data.errors[field].join('<br>');
+                }
+            }
+        });
+    });
+</script>

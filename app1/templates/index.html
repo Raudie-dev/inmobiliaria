@@ -1,113 +1,506 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registros de Prueba</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inmobiliaria Premium - Encuentra tu hogar ideal</title>
+    
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1E40AF;
+            --secondary: #10B981;
+            --dark: #0F172A;
+            --light: #F8FAFC;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #334155;
+            background-color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--dark);
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--primary) !important;
+            letter-spacing: -0.5px;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            padding: 160px 0 100px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(37, 99, 235, 0.8) 100%), url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            color: white;
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .hero h1 {
+            color: white;
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 1s ease 0.2s;
+            animation-fill-mode: both;
+        }
+
+        /* Stats Bar */
+        .stats-wrapper {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            transform: translateY(-50%);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .stat-item h3 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-item p {
+            color: #64748B;
+            font-weight: 500;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+        }
+
+        /* Featured Properties */
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .property-card {
+            background: white;
+            border-radius: 1.25rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            transition: all 0.4s ease;
+            height: 100%;
+            border: 1px solid #E2E8F0;
+        }
+        
+        .property-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+        
+        .property-img-wrapper {
+            position: relative;
+            height: 280px;
+            overflow: hidden;
+        }
+        
+        .property-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .property-card:hover .property-img {
+            transform: scale(1.05);
+        }
+        
+        .property-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .property-price {
+            position: absolute;
+            bottom: -1.5rem;
+            right: 1.5rem;
+            background: var(--secondary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Trust Section */
+        .trust-section {
+            background-color: white;
+            padding: 6rem 0;
+            border-top: 1px solid #E2E8F0;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        
+        .trust-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .trust-item:hover .trust-icon {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 5rem 0;
+            color: white;
+            text-align: center;
+            border-radius: 2rem;
+            margin: 4rem auto;
+            max-width: 1200px;
+            box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.25);
+        }
+
+        /* Buttons */
+        .btn-custom {
+            padding: 1rem 2.5rem;
+            border-radius: 3rem;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary-custom {
+            background-color: var(--primary);
+            color: white;
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-primary-custom:hover {
+            background-color: transparent;
+            color: var(--primary);
+        }
+        
+        .btn-light-custom {
+            background-color: white;
+            color: var(--primary-dark);
+            border: 2px solid white;
+        }
+        
+        .btn-light-custom:hover {
+            background-color: transparent;
+            color: white;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: #94A3B8;
+            padding: 4rem 0 2rem;
+        }
+        
+        footer h5 {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+    </style>
 </head>
 <body>
+
     <!-- Navbar -->
-    <header class="header">
-        <div class="container header-wrapper">
-            <a href="{% url 'index' %}" class="logo">
-                <i class="fas fa-flask-vial me-2"></i>PruebasApp
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="fas fa-cube me-2 fs-3"></i> 
+                LUXE<span class="text-dark">ESTATES</span>
             </a>
-            <nav>
-                <ul class="nav-list">
-                    <li><a href="{% url 'index' %}" class="active"><i class="fas fa-table"></i> Registros</a></li>
-                    <li><a href="#"><i class="fas fa-info-circle"></i> Acerca</a></li>
-                    <li><a href="#"><i class="fas fa-envelope"></i> Contacto</a></li>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-toggle="target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto font-weight-bold">
+                    <li class="nav-item"><a class="nav-link text-dark fw-medium px-3" href="#inicio">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark fw-medium px-3" href="#destacados">Propiedades</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark fw-medium px-3" href="#confianza">Por qué elegirnos</a></li>
                 </ul>
-            </nav>
+                <div class="d-flex gap-3 align-items-center">
+                    <a href="{% url 'propiedades_publica' %}" class="text-decoration-none fw-semibold text-primary">Ver Catálogo</a>
+                    <a href="{% url 'login' %}" class="btn btn-dark rounded-pill px-4 py-2 fw-semibold shadow-sm">
+                        <i class="fas fa-lock me-2 small"></i>Portal
+                    </a>
+                </div>
+            </div>
         </div>
-    </header>
+    </nav>
 
     <!-- Hero Section -->
-    <section class="welcome-area" style="padding-top: 120px;">
+    <section class="hero" id="inicio">
         <div class="container">
-            <div class="welcome-content">
-                <div class="welcome-text">
-                    <h1><i class="fas fa-database"></i> Consulta de Registros</h1>
-                    <p>
-                        Visualiza y filtra los registros de pruebas de manera sencilla y dinámica.<br>
-                        Utiliza el buscador y los filtros para encontrar la información que necesitas.
-                    </p>
-                </div>
-                <div class="welcome-image">
-                    <img src="{% static 'images/data_hero.png' %}" alt="Registros" style="max-width:350px;">
+            <div class="row">
+                <div class="col-lg-8 col-xl-7">
+                    <span class="badge bg-white text-primary px-3 py-2 rounded-pill mb-4 shadow-sm fw-bold border" style="animation: fadeInUp 1s ease; display: inline-block;">
+                        <i class="fas fa-star text-warning me-1"></i> La Agencia #1 en Transparencia
+                    </span>
+                    <h1>Encuentra el hogar que define tu estilo de vida.</h1>
+                    <p>Más que metros cuadrados, vendemos experiencias. Descubre las propiedades más exclusivas y deja que nuestro sistema inteligente de matching encuentre la coincidencia perfecta para ti.</p>
+                    
+                    <div class="d-flex flex-wrap gap-3" style="animation: fadeInUp 1s ease 0.4s; animation-fill-mode: both;">
+                        <a href="{% url 'propiedades_publica' %}" class="btn btn-custom btn-primary-custom shadow-lg">
+                            Explorar Catálogo
+                        </a>
+                        <a href="#confianza" class="btn btn-custom btn-light-custom">
+                            Conocer Más
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Tabla de registros -->
-    <section class="section section-light" style="padding-top: 40px;">
-        <div class="container">
-            <h2 class="section-title" style="font-size:2rem;"><i class="fas fa-list"></i> Registros de Prueba</h2>
-            <form method="get" class="row g-3 mb-4">
-                <div class="col-md-5">
-                    <input type="text" name="busqueda" class="form-control" placeholder="Buscar por nombre..." value="{{ busqueda }}">
+    <!-- Stats Section -->
+    <section class="container" style="margin-top: -50px; z-index: 20; position: relative;">
+        <div class="stats-wrapper">
+            <div class="row text-center g-4">
+                <div class="col-md-4 stat-item border-end d-none d-md-block">
+                    <h3>15+</h3>
+                    <p>Años de Experiencia</p>
                 </div>
-                <div class="col-md-3">
-                    <select name="socio" class="form-select">
-                        <option value="">-- Socio --</option>
-                        <option value="si" {% if socio == 'si' %}selected{% endif %}>Sí</option>
-                        <option value="no" {% if socio == 'no' %}selected{% endif %}>No</option>
-                    </select>
+                <div class="col-md-4 stat-item border-end d-none d-md-block">
+                    <h3>$50M+</h3>
+                    <p>Volumen Gestionado</p>
                 </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn w-100">
-                        <i class="fas fa-search"></i> Filtrar
-                    </button>
+                <div class="col-md-4 stat-item">
+                    <h3>98%</h3>
+                    <p>Clientes Satisfechos</p>
                 </div>
-                <div class="col-md-2">
-                    <a href="{% url 'index' %}" class="btn btn-secondary w-100">
-                        <i class="fas fa-eraser"></i> Limpiar
-                    </a>
-                </div>
-            </form>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Fecha</th>
-                        <th>Socio</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for prueba in pruebas %}
-                    <tr>
-                        <td>{{ prueba.nombre }}</td>
-                        <td>{{ prueba.fecha }}</td>
-                        <td>
-                            {% if prueba.socio %}
-                                <span class="badge bg-success">Sí</span>
-                            {% else %}
-                                <span class="badge bg-secondary">No</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="3" class="text-center">No hay registros.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            </div>
         </div>
     </section>
 
+    <!-- Trust / Features Section -->
+    <section class="trust-section" id="confianza">
+        <div class="container py-5">
+            <div class="section-title">
+                <h2>¿Por qué confiar en nosotros?</h2>
+                <p class="text-muted fs-5 mt-3 max-w-2xl mx-auto">Nuestro compromiso es brindarte seguridad, transparencia y agilidad en cada paso de tu inversión inmobiliaria.</p>
+            </div>
+            
+            <div class="row g-5 text-center">
+                <div class="col-md-4 trust-item">
+                    <div class="trust-icon shadow-sm">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Transacciones Seguras</h4>
+                    <p class="text-muted">Garantizamos auditorías legales en cada propiedad para que tu inversión esté 100% protegida contra fraudes.</p>
+                </div>
+                
+                <div class="col-md-4 trust-item">
+                    <div class="trust-icon shadow-sm">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Smart Matching</h4>
+                    <p class="text-muted">Nuestro CRM analiza tus preferencias en tiempo real y te notifica automáticamente cuando entra una propiedad ideal.</p>
+                </div>
+                
+                <div class="col-md-4 trust-item">
+                    <div class="trust-icon shadow-sm">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Acompañamiento Total</h4>
+                    <p class="text-muted">Desde la primera visita hasta la firma de las escrituras. Asesoramiento financiero y notarial incluido.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Properties -->
+    <section class="py-5 my-5" id="destacados">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-end mb-5">
+                <div class="section-title mb-0 text-start">
+                    <h2>Propiedades Exclusivas</h2>
+                    <p class="text-muted fs-5 mt-2">Recién ingresadas al mercado. Oportunidades únicas.</p>
+                </div>
+                <a href="{% url 'propiedades_publica' %}" class="btn btn-outline-primary rounded-pill fw-semibold px-4 d-none d-md-inline-block">Ver todo el inventario <i class="fas fa-arrow-right ms-2"></i></a>
+            </div>
+
+            <div class="row g-4">
+                {% for propiedad in propiedades_destacadas %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="property-card d-flex flex-column">
+                        <div class="property-img-wrapper">
+                            {% if propiedad.get_portada %}
+                                <img src="{{ propiedad.get_portada.url }}" alt="{{ propiedad.titulo }}" class="property-img">
+                            {% else %}
+                                <div class="w-100 h-100 bg-light d-flex align-items-center justify-content-center text-secondary">
+                                    <i class="fas fa-image fs-1"></i>
+                                </div>
+                            {% endif %}
+                            <span class="property-badge">{{ propiedad.tipo_operacion }}</span>
+                            <span class="property-price">${{ propiedad.precio }}</span>
+                        </div>
+                        
+                        <div class="p-4 pt-5 mt-2 flex-grow-1 d-flex flex-column">
+                            <h5 class="fw-bold mb-2">{{ propiedad.titulo|truncatechars:45 }}</h5>
+                            <p class="text-muted small mb-4"><i class="fas fa-map-marker-alt text-primary me-2"></i>{{ propiedad.zona }} - {{ propiedad.direccion }}</p>
+                            
+                            <div class="d-flex justify-content-between align-items-center mt-auto border-top pt-3 text-secondary small fw-medium">
+                                <span><i class="fas fa-bed me-2"></i>{{ propiedad.habitaciones }} Hab</span>
+                                <span><i class="fas fa-bath me-2"></i>{{ propiedad.banos }} Baños</span>
+                                <span><i class="fas fa-ruler-combined me-2"></i>{{ propiedad.superficie }} m²</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <i class="fas fa-home text-muted fs-1 mb-3"></i>
+                    <h4 class="text-muted">Aún no hay propiedades destacadas.</h4>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="text-center mt-5 d-md-none">
+                <a href="{% url 'propiedades_publica' %}" class="btn btn-primary rounded-pill fw-semibold px-5 w-100 py-3">Ver todo el inventario</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <div class="container px-3">
+        <section class="cta-section">
+            <h2 class="text-white mb-4" style="font-size: 3rem;">¿Buscas vender tu propiedad?</h2>
+            <p class="fs-5 mb-5 opacity-75 max-w-2xl mx-auto px-4">Conectamos tu inmueble con nuestra extensa base de clientes pre-calificados a través de nuestro sistema de Matching automático.</p>
+            <a href="#" class="btn btn-custom btn-light-custom shadow-lg">Quiero que me contacten</a>
+        </section>
+    </div>
+
     <!-- Footer -->
-    <footer class="footer mt-5">
-        <div class="container footer-content">
-            <a href="{% url 'index' %}" class="footer-logo">
-                <i class="fas fa-flask-vial"></i> PruebasApp
-            </a>
-            <p>&copy; {{ now|date:"Y" }} PruebasApp. Todos los derechos reservados.</p>
+    <footer>
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 mb-4">
+                    <h4 class="text-white fw-bold mb-4"><i class="fas fa-cube text-primary me-2"></i>LUXE ESTATES</h4>
+                    <p class="opacity-75">Redefiniendo el estándar en el mercado inmobiliario mediante tecnología y servicio excepcional.</p>
+                    <div class="d-flex gap-3 mt-4">
+                        <a href="#" class="text-white bg-secondary bg-opacity-25 rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white bg-secondary bg-opacity-25 rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white bg-secondary bg-opacity-25 rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-4">
+                    <h5>Navegación</h5>
+                    <ul class="list-unstyled opacity-75">
+                        <li class="mb-2"><a href="#inicio" class="text-decoration-none text-reset">Inicio</a></li>
+                        <li class="mb-2"><a href="{% url 'propiedades_publica' %}" class="text-decoration-none text-reset">Catálogo</a></li>
+                        <li class="mb-2"><a href="#confianza" class="text-decoration-none text-reset">Nosotros</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-4">
+                    <h5>Legal</h5>
+                    <ul class="list-unstyled opacity-75">
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-reset">Términos de Servicio</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-reset">Aviso de Privacidad</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-reset">Cookies</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-4">
+                    <h5>Contacto</h5>
+                    <ul class="list-unstyled opacity-75">
+                        <li class="mb-3"><i class="fas fa-map-marker-alt me-2 text-primary"></i> Av. Empresarial 123, Ciudad</li>
+                        <li class="mb-3"><i class="fas fa-phone-alt me-2 text-primary"></i> +1 (555) 123-4567</li>
+                        <li class="mb-3"><i class="fas fa-envelope me-2 text-primary"></i> contacto@luxe-estates.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-top border-secondary mt-5 pt-4 text-center opacity-50 small">
+                <p class="mb-0">&copy; 2026 Luxe Estates CRM. Todos los derechos reservados.</p>
+            </div>
         </div>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Navbar blur on scroll
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                document.querySelector('.navbar').style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                document.querySelector('.navbar').style.boxShadow = '0 4px 6px -1px rgba(0,0,0,0.1)';
+            } else {
+                document.querySelector('.navbar').style.backgroundColor = 'rgba(255, 255, 255, 1)';
+                document.querySelector('.navbar').style.boxShadow = 'none';
+            }
+        });
+    </script>
 </body>
 </html>

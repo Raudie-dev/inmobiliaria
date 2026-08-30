@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Propiedad | CRM Inmobiliario{% endblock %}
+{% block page_title %}{% if form.instance.pk %}Editar Propiedad{% else %}Nueva Propiedad{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="glass-card">
+            <h5 class="fw-bold mb-4">Datos de la Propiedad</h5>
+            <form method="post" enctype="multipart/form-data" class="row g-3">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                <div class="col-md-6 mb-2">
+                    <label for="{{ field.id_for_label }}" class="form-label fw-semibold text-muted small">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <div class="form-text">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+                
+                <!-- Galería de imágenes extra -->
+                <div class="col-md-12 mt-3">
+                    <label for="imagenes_galeria" class="form-label fw-bold">Imágenes de Galería (Múltiples)</label>
+                    <input type="file" class="form-control" id="imagenes_galeria" name="imagenes_galeria" multiple accept="image/*">
+                    <small class="text-muted">Sube varias fotos adicionales a la principal para la página de detalle.</small>
+                </div>
+                
+                <div class="col-12 mt-4 text-end">
+                    <a href="{% url 'propiedad_list' %}" class="btn btn-light border me-2">Cancelar</a>
+                    <button type="submit" class="btn btn-primary-custom">
+                        <i class="fas fa-save"></i> Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add bootstrap form-control classes to inputs
+    document.addEventListener("DOMContentLoaded", function() {
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            if (input.tagName === 'SELECT') {
+                input.classList.add('form-select');
+            } else if (input.type !== 'checkbox' && input.type !== 'radio') {
+                input.classList.add('form-control');
+            }
+        });
+    });
+</script>
+{% endblock %}

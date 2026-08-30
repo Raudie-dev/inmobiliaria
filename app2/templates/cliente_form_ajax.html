@@ -1,0 +1,53 @@
+<form id="clienteAjaxForm">
+    {% csrf_token %}
+    <div class="row g-3">
+        {% for field in form %}
+        <div class="col-md-6 mb-2">
+            <label for="{{ field.id_for_label }}" class="form-label fw-semibold text-muted small">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+                <div class="form-text">{{ field.help_text }}</div>
+            {% endif %}
+            <div class="text-danger small" id="error_{{ field.name }}"></div>
+        </div>
+        {% endfor %}
+    </div>
+</form>
+<script>
+    // Add bootstrap form-control classes
+    document.querySelectorAll('#clienteAjaxForm input, #clienteAjaxForm select, #clienteAjaxForm textarea').forEach(input => {
+        if (input.type === 'checkbox') {
+            input.classList.add('form-check-input');
+            input.parentElement.classList.add('form-check');
+        } else if (input.tagName === 'SELECT') {
+            input.classList.add('form-select');
+        } else if (input.type !== 'radio') {
+            input.classList.add('form-control');
+        }
+    });
+</script>
+<script>
+    document.getElementById('clienteAjaxForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const url = this.getAttribute('action');
+        
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+            headers: {'X-Requested-With': 'XMLHttpRequest'}
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                document.querySelectorAll('.text-danger').forEach(el => el.innerHTML = '');
+                for (const field in data.errors) {
+                    const errEl = document.getElementById('error_' + field);
+                    if (errEl) errEl.innerHTML = data.errors[field].join('<br>');
+                }
+            }
+        });
+    });
+</script>

@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Clientes | CRM Inmobiliario{% endblock %}
+{% block page_title %}Listado de Clientes (Leads){% endblock %}
+
+{% block content %}
+<div class="glass-card">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="fw-bold mb-0">Clientes Activos e Inactivos</h5>
+        <button class="btn btn-primary-custom" onclick="openClienteModal()">
+            <i class="fas fa-plus"></i> Nuevo Cliente
+        </button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-custom align-middle">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Contacto</th>
+                    <th>Interés</th>
+                    <th>Presupuesto</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cliente in clientes %}
+                <tr>
+                    <td class="fw-semibold">{{ cliente.nombre }}</td>
+                    <td>
+                        <small class="d-block"><i class="fas fa-envelope text-muted"></i> {{ cliente.email }}</small>
+                        <small class="d-block"><i class="fas fa-phone text-muted"></i> {{ cliente.telefono }}</small>
+                    </td>
+                    <td>
+                        {{ cliente.tipo_inmueble }}<br>
+                        <small class="text-muted"><i class="fas fa-map-marker-alt"></i> {{ cliente.zona_interes }}</small>
+                    </td>
+                    <td>${{ cliente.presupuesto_min }} - ${{ cliente.presupuesto_max }}</td>
+                    <td>
+                        {% if cliente.activo %}
+                            <span class="badge bg-success">Activo</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <button onclick="openClienteModal({{ cliente.pk }})" class="btn btn-sm btn-light border" title="Editar">
+                                <i class="fas fa-edit text-primary"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-muted">No hay clientes registrados.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="clienteModal" tabindex="-1" aria-labelledby="clienteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="clienteModalLabel">Gestionar Cliente</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="clienteModalBody">
+        <div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" form="clienteAjaxForm" class="btn btn-primary-custom"><i class="fas fa-save"></i> Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    let currentModal = null;
+    function openClienteModal(pk) {
+        if (!currentModal) {
+            currentModal = new bootstrap.Modal(document.getElementById('clienteModal'));
+        }
+        const body = document.getElementById('clienteModalBody');
+        body.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div></div>';
+        currentModal.show();
+        
+        const url = pk ? `/app2/api/cliente/${pk}/editar/` : `/app2/api/cliente/crear/`;
+        
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                body.innerHTML = data.html;
+                const form = document.getElementById('clienteAjaxForm');
+                form.setAttribute('action', url);
+                
+                // Ejecutar scripts dentro del html inyectado si los hay
+                const scripts = body.getElementsByTagName('script');
+                for (let i = 0; i < scripts.length; i++) {
+                    eval(scripts[i].innerText);
+                }
+            })
+            .catch(err => {
+                body.innerHTML = '<div class="alert alert-danger">Error al cargar formulario.</div>';
+            });
+    }
+</script>
+{% endblock %}

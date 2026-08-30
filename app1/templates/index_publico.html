@@ -1,0 +1,340 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inmobiliaria Premium - Consultoría y Venta de Inmuebles Exclusivos</title>
+    <meta name="description" content="Descubre el hogar de tus sueños con nuestra agencia inmobiliaria. Gestión integral, asesoría legal y el mejor catálogo de propiedades en venta y alquiler.">
+    
+    <!-- OpenGraph & Twitter Cards -->
+    <meta property="og:title" content="Inmobiliaria Premium - Consultoría y Venta de Inmuebles">
+    <meta property="og:description" content="Gestión integral, asesoría legal y el mejor catálogo de propiedades en venta y alquiler.">
+    <meta property="og:image" content="{% static 'img/og-image.webp' %}">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Custom SEO & GSAP Styles -->
+    <link rel="stylesheet" href="{% static 'css/seo_styles.css' %}">
+    
+    <style>
+        /* Ajustes básicos si seo_styles.css no está cargado completamente aún */
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Outfit', sans-serif; }
+        .property-img { height: 250px; object-fit: cover; width: 100%; }
+    </style>
+
+    <!-- JSON-LD LocalBusiness -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "RealEstateAgent",
+      "name": "Inmobiliaria Premium",
+      "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}",
+      "@id": "",
+      "url": "{{ request.scheme }}://{{ request.get_host }}",
+      "telephone": "+123456789",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Av. Principal 123",
+        "addressLocality": "Ciudad",
+        "postalCode": "1000",
+        "addressCountry": "CO"
+      }
+    }
+    </script>
+</head>
+<body>
+
+    <!-- Scroll Progress -->
+    <div id="scroll-progress"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top shadow-sm bg-white">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="{% static 'img/logo.png' %}" alt="Inmobiliaria Premium - Logo" width="150" height="50" class="d-inline-block align-text-top">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto fw-medium">
+                    <li class="nav-item"><a class="nav-link" href="#servicios">Servicios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#propiedades">Propiedades</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+                    <li class="nav-item ms-lg-3">
+                        <a class="btn btn-primary" href="/contacto"><i class="bi bi-chat-dots me-2"></i>Contáctanos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section text-center">
+        <div class="hero-bg"></div>
+        <div class="container hero-content pt-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <!-- Único H1 de la página -->
+                    <h1 class="display-4 fw-bold mb-4 gsap-fade-up">Encuentra y gestiona tu propiedad ideal con expertos</h1>
+                    <p class="lead mb-4 gsap-fade-up">Tu aliado estratégico en el mercado inmobiliario. Conectamos vendedores y compradores con inteligencia y transparencia.</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- TL;DR / Key Takeaways -->
+    <section class="container mt-n4 position-relative z-index-10 gsap-fade-up">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="tldr-box shadow-sm bg-white">
+                    <h2 class="h5 fw-bold mb-3"><i class="bi bi-lightning-charge-fill text-warning me-2"></i>Resumen Rápido (TL;DR)</h2>
+                    <ul class="mb-4">
+                        <li><strong>Gestión integral:</strong> Nos encargamos desde la tasación hasta la firma del contrato.</li>
+                        <li><strong>Catálogo exclusivo:</strong> Propiedades verificadas en las mejores zonas de la ciudad.</li>
+                        <li><strong>Asesoría legal:</strong> Abogados expertos para garantizar seguridad en tu inversión.</li>
+                    </ul>
+                    <a href="#propiedades" class="btn btn-primary btn-lg px-4"><i class="bi bi-search me-2"></i>Ver Propiedades Disponibles</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Servicios (GSAP Stagger) -->
+    <section id="servicios" class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5 gsap-fade-up">
+                <h2 class="fw-bold">Nuestros Servicios Inmobiliarios</h2>
+                <p class="text-muted">Soluciones completas para compradores, vendedores e inversores.</p>
+            </div>
+            
+            <div class="row g-4 gsap-stagger-container">
+                <div class="col-md-4">
+                    <div class="service-card text-center">
+                        <div class="icon-container">
+                            <i class="bi bi-house-door fs-2"></i>
+                        </div>
+                        <h3 class="h5 fw-bold">Compra y Venta</h3>
+                        <p class="text-muted small">Asesoramiento experto para conseguir el mejor precio de mercado en tiempo récord.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="service-card text-center">
+                        <div class="icon-container">
+                            <i class="bi bi-file-earmark-text fs-2"></i>
+                        </div>
+                        <h3 class="h5 fw-bold">Asesoría Legal</h3>
+                        <p class="text-muted small">Revisión de contratos y saneamiento de títulos para transacciones 100% seguras.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="service-card text-center">
+                        <div class="icon-container">
+                            <i class="bi bi-graph-up-arrow fs-2"></i>
+                        </div>
+                        <h3 class="h5 fw-bold">Tasaciones Exactas</h3>
+                        <p class="text-muted small">Valoramos tu inmueble basándonos en métricas reales y big data del sector.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tabla Comparativa -->
+    <section class="py-5 container gsap-fade-up">
+        <h2 class="fw-bold text-center mb-4">¿Por qué elegirnos?</h2>
+        <div class="table-responsive shadow-sm rounded-3">
+            <table class="table table-hover align-middle mb-0 bg-white">
+                <thead class="table-light">
+                    <tr>
+                        <th>Característica</th>
+                        <th>Inmobiliaria Premium</th>
+                        <th>Agencias Tradicionales</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="fw-medium">Visibilidad en Buscadores</td>
+                        <td><i class="bi bi-check-circle-fill text-success me-2"></i>Alta (Estrategia SEO/GEO)</td>
+                        <td><i class="bi bi-x-circle-fill text-danger me-2"></i>Baja</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-medium">Atención Tecnológica</td>
+                        <td><i class="bi bi-check-circle-fill text-success me-2"></i>CRM Integral y Notificaciones</td>
+                        <td><i class="bi bi-x-circle-fill text-danger me-2"></i>Manual</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-medium">Asesoría Legal Incluida</td>
+                        <td><i class="bi bi-check-circle-fill text-success me-2"></i>Sí, de punta a punta</td>
+                        <td><i class="bi bi-x-circle-fill text-danger me-2"></i>Con costo adicional</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Propiedades Destacadas -->
+    <section id="propiedades" class="py-5 bg-light">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-end mb-4 gsap-fade-up">
+                <div>
+                    <h2 class="fw-bold mb-0">Propiedades Destacadas</h2>
+                    <p class="text-muted mb-0">Encuentra las mejores oportunidades del mercado.</p>
+                </div>
+                <a href="/propiedades" class="btn btn-outline-primary d-none d-md-block">Ver todo el catálogo</a>
+            </div>
+            
+            <div class="row g-4 gsap-stagger-container">
+                {% for propiedad in propiedades|slice:":6" %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="card border-0 shadow-sm h-100 service-card px-0 py-0 overflow-hidden">
+                        {% if propiedad.get_portada %}
+                            <img src="{{ propiedad.get_portada.url }}" alt="{{ propiedad.titulo }}" class="property-img" loading="lazy">
+                        {% else %}
+                            <div class="bg-light d-flex align-items-center justify-content-center property-img text-secondary">
+                                <i class="bi bi-image fs-1"></i>
+                            </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <span class="badge bg-primary mb-2">{{ propiedad.tipo_operacion }}</span>
+                            <h3 class="h6 fw-bold mb-2">{{ propiedad.titulo }}</h3>
+                            <p class="text-muted small mb-3"><i class="bi bi-geo-alt me-1"></i>{{ propiedad.zona }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fs-5 fw-bold text-dark">${{ propiedad.precio }}</span>
+                                <a href="{% url 'detalle_propiedad_publica' propiedad.pk %}" class="btn btn-sm btn-outline-secondary">Ver Detalles</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <p class="text-muted">No hay propiedades destacadas en este momento.</p>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="text-center mt-4 d-block d-md-none">
+                <a href="/propiedades" class="btn btn-outline-primary w-100">Ver todo el catálogo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Accordion con JSON-LD Dinámico -->
+    <section id="faq" class="py-5 container gsap-fade-up">
+        <h2 class="fw-bold text-center mb-5">Preguntas Frecuentes</h2>
+        
+        <!-- JSON-LD FAQPage -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [{
+            "@type": "Question",
+            "name": "¿Cuáles son los requisitos para alquilar?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Se requiere demostración de ingresos, garante o seguro de caución y un mes de depósito."
+            }
+          }, {
+            "@type": "Question",
+            "name": "¿Cobran comisión por la venta?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sí, nuestra comisión estándar es del 3% sobre el valor final de venta, cubriendo todos los gastos de marketing y asesoría legal."
+            }
+          }]
+        }
+        </script>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion shadow-sm" id="accordionFAQ">
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                ¿Cuáles son los requisitos para alquilar?
+                            </button>
+                        </h3>
+                        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionFAQ">
+                            <div class="accordion-body text-muted">
+                                Se requiere demostración de ingresos, garante o seguro de caución y un mes de depósito.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                ¿Cobran comisión por la venta?
+                            </button>
+                        </h3>
+                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+                            <div class="accordion-body text-muted">
+                                Sí, nuestra comisión estándar es del 3% sobre el valor final de venta, cubriendo todos los gastos de marketing y asesoría legal.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Compartir en Redes -->
+    <section class="py-4 bg-light text-center border-top gsap-fade-up">
+        <div class="container">
+            <p class="fw-medium mb-3">Comparte nuestro sitio</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="https://api.whatsapp.com/send?text=Mira%20esta%20inmobiliaria%20{{ request.build_absolute_uri }}" target="_blank" class="btn btn-outline-success rounded-circle"><i class="bi bi-whatsapp"></i></a>
+                <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="_blank" class="btn btn-outline-dark rounded-circle"><i class="bi bi-twitter-x"></i></a>
+                <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}" target="_blank" class="btn btn-outline-primary rounded-circle"><i class="bi bi-linkedin"></i></a>
+                <button onclick="navigator.clipboard.writeText(window.location.href); alert('Enlace copiado');" class="btn btn-outline-secondary rounded-circle"><i class="bi bi-link-45deg"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <img src="{% static 'img/logo.png' %}" alt="Inmobiliaria Premium - Logo" width="150" height="50" class="mb-3 bg-white p-2 rounded">
+                    <p class="text-white-50 small">Conectando personas con sus hogares ideales a través de un servicio de primer nivel y tecnología de vanguardia.</p>
+                </div>
+                <div class="col-md-4">
+                    <h4 class="h6 fw-bold mb-3">Enlaces Rápidos</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="/" class="text-white-50 text-decoration-none">Inicio</a></li>
+                        <li><a href="/propiedades" class="text-white-50 text-decoration-none">Propiedades</a></li>
+                        <li><a href="/contacto" class="text-white-50 text-decoration-none">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h4 class="h6 fw-bold mb-3">Contacto</h4>
+                    <p class="text-white-50 small mb-1"><i class="bi bi-geo-alt me-2"></i>Av. Principal 123, Ciudad</p>
+                    <p class="text-white-50 small mb-1"><i class="bi bi-telephone me-2"></i>+123456789</p>
+                    <p class="text-white-50 small mb-0"><i class="bi bi-envelope me-2"></i>info@inmobiliaria.com</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Fixed CTA -->
+    <div class="mobile-cta d-md-none">
+        <a href="/contacto" class="btn btn-primary w-100 fw-bold shadow"><i class="bi bi-whatsapp me-2"></i>Contactar Ahora</a>
+    </div>
+
+    <!-- Scripts: Bootstrap & GSAP -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
