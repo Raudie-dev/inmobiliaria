@@ -1,24 +1,24 @@
 {% extends 'base.html' %}
 
-{% block title %}Medios de Contacto - CRM{% endblock %}
-
-{% block page_title %}Medios de Contacto{% endblock %}
-
+{% block title %}Integraciones de Contacto | Inmobiliaria CRM{% endblock %}
+    
+{% block page_title %}Integraciones de Contacto{% endblock %}
+    
 {% block content %}
-<div class="row mb-4">
+<div class="row mb-5">
     <div class="col-12">
-        <h2 class="fw-bold">Integración de Medios de Contacto</h2>
-        <p class="text-muted">Ajusta tus canales de comunicación para el envío automatizado de mensajes a tus clientes.</p>
+        <h2 class="fw-bold font-heading text-main">Integración de Canales de Contacto</h2>
+        <p class="text-muted">Configura tus canales de comunicación para enviar mensajes automatizados a tus leads.</p>
     </div>
 </div>
 
 <!-- Tabs Nav -->
-<ul class="nav nav-tabs mb-4" id="contactTabs" role="tablist">
+<ul class="nav nav-pills mb-4 gap-2" id="contactTabs" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link active fw-bold px-4" id="whatsapp-tab" data-bs-toggle="tab" data-bs-target="#whatsapp" type="button" role="tab" aria-controls="whatsapp" aria-selected="true"><i class="fab fa-whatsapp me-2 text-success"></i> WhatsApp API</button>
+        <button class="nav-link active fw-medium px-4 py-2 rounded-pill d-flex align-items-center gap-2" id="whatsapp-tab" data-bs-toggle="pill" data-bs-target="#whatsapp" type="button" role="tab" aria-controls="whatsapp" aria-selected="true"><i class="bi bi-whatsapp"></i> WhatsApp API</button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link fw-bold px-4" id="email-tab" data-bs-toggle="tab" data-bs-target="#email" type="button" role="tab" aria-controls="email" aria-selected="false"><i class="fas fa-envelope me-2 text-primary"></i> Correo (SMTP)</button>
+        <button class="nav-link fw-medium px-4 py-2 rounded-pill d-flex align-items-center gap-2" id="email-tab" data-bs-toggle="pill" data-bs-target="#email" type="button" role="tab" aria-controls="email" aria-selected="false"><i class="bi bi-envelope"></i> Correo (SMTP)</button>
     </li>
 </ul>
 
@@ -27,37 +27,44 @@
     
     <!-- WhatsApp Tab -->
     <div class="tab-pane fade show active" id="whatsapp" role="tabpanel" aria-labelledby="whatsapp-tab">
-        <div class="row">
+        <div class="row g-4">
             <div class="col-lg-8">
-                <div class="glass-card text-center py-5">
-                    <h5 class="fw-bold mb-3">Vincular Dispositivo WhatsApp</h5>
-                    <p class="text-muted mb-4">Escanea el código QR con tu aplicación de WhatsApp (Dispositivos Vinculados) para permitir que el CRM envíe mensajes en tu nombre cuando agregas propiedades nuevas.</p>
+                <div class="dashboard-card text-center py-5">
+                    <div class="bg-success bg-opacity-10 text-success rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 64px; height: 64px;">
+                        <i class="bi bi-whatsapp fs-2"></i>
+                    </div>
+                    <h5 class="fw-bold font-heading mb-3">Vincular Dispositivo WhatsApp</h5>
+                    <p class="text-muted mb-4 max-w-2xl mx-auto px-md-5">Escanea el código QR con tu aplicación de WhatsApp (Dispositivos Vinculados) para permitir que el CRM envíe mensajes en tu nombre cuando se agreguen nuevas propiedades que coincidan.</p>
                     
                     <div id="qr-container" class="d-flex justify-content-center mb-4 align-items-center" style="min-height: 256px;">
                         <div class="spinner-border text-success" role="status" id="qr-spinner">
-                            <span class="visually-hidden">Cargando...</span>
+                            <span class="visually-hidden">Loading...</span>
                         </div>
-                        <div id="qrcode"></div>
-                        <div id="connected-msg" class="d-none text-success">
-                            <i class="fas fa-check-circle fs-1 mb-2"></i>
-                            <h4 class="fw-bold">¡WhatsApp Conectado!</h4>
-                            <p>Tu CRM ya puede enviar mensajes.</p>
+                        <div id="qrcode" class="p-3 bg-white rounded-3 border shadow-sm"></div>
+                        <div id="connected-msg" class="d-none">
+                            <div class="bg-success bg-opacity-10 text-success rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                <i class="bi bi-check-lg fs-1"></i>
+                            </div>
+                            <h4 class="fw-bold font-heading text-success">¡WhatsApp Conectado!</h4>
+                            <p class="text-muted">Tu CRM está listo para enviar mensajes.</p>
                         </div>
                     </div>
                     
                     <div class="d-flex justify-content-center gap-3">
-                        <button class="btn btn-outline-success" id="btn-generate" onclick="generateQR()">Generar QR Nuevo</button>
-                        <button class="btn btn-outline-danger" id="btn-unlink" onclick="unlinkWhatsApp()">Desvincular Dispositivo</button>
+                        <button class="btn btn-outline-success fw-medium px-4" id="btn-generate" onclick="generateQR()">Generar Nuevo QR</button>
+                        <button class="btn btn-outline-danger fw-medium px-4" id="btn-unlink" onclick="unlinkWhatsApp()">Desvincular Dispositivo</button>
                     </div>
-                    <small class="d-block mt-3 text-muted" id="ws-status">Verificando estado del servidor NodeJS...</small>
+                    <div class="mt-4">
+                        <span class="badge bg-light text-muted border px-3 py-2" id="ws-status">Verificando estado del servidor NodeJS...</span>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="alert alert-success shadow-sm border-0 mb-4" role="alert">
-                    <h5 class="alert-heading fw-bold mb-3"><i class="fas fa-magic me-2"></i>Automatización</h5>
-                    <p>Una vez vinculado, cuando crees una nueva propiedad que encaje con los requerimientos de tus clientes (Smart Matching), el sistema les enviará un WhatsApp automáticamente.</p>
-                    <hr>
-                    <small>Asegúrate de que el microservicio Node.js esté ejecutándose en el puerto 3000 de tu servidor.</small>
+                <div class="dashboard-card bg-success bg-opacity-10 border-success border-opacity-25 mb-4">
+                    <h5 class="fw-bold font-heading text-success mb-3 d-flex align-items-center gap-2"><i class="bi bi-magic"></i> Automatización</h5>
+                    <p class="text-dark opacity-75 small">Una vez vinculado, cuando crees una nueva propiedad que se ajuste a los requisitos de tus clientes (Smart Matching), el sistema les enviará automáticamente un mensaje de WhatsApp.</p>
+                    <hr class="border-success opacity-25">
+                    <small class="text-dark opacity-50">Asegúrate de que el microservicio Node.js se esté ejecutando en el puerto 3000 de tu servidor.</small>
                 </div>
             </div>
         </div>
@@ -65,53 +72,40 @@
 
     <!-- Email Tab -->
     <div class="tab-pane fade" id="email" role="tabpanel" aria-labelledby="email-tab">
-        <div class="row">
+        <div class="row g-4">
             <div class="col-lg-8">
-                <div class="alert alert-info shadow-sm border-0 mb-4" role="alert">
-                    <h5 class="alert-heading fw-bold mb-3"><i class="fas fa-info-circle me-2"></i>¿Cómo configurar Gmail?</h5>
-                    <p>Google no permite usar tu contraseña habitual para conectar sistemas de terceros (SMTP) por seguridad. Sigue estos pasos:</p>
-                    <hr>
-                    <ol class="mb-0">
-                        <li class="mb-2">Ve a la cuenta de Google que deseas usar y entra a <strong>Seguridad</strong>.</li>
-                        <li class="mb-2">Asegúrate de tener la <strong>Verificación en 2 pasos</strong> activada.</li>
-                        <li class="mb-2">Busca la opción <strong>Contraseñas de aplicaciones</strong> (App Passwords).</li>
-                        <li class="mb-2">Genera una nueva contraseña para "App: Correo" y "Dispositivo: Otro (CRM)".</li>
-                        <li>Pega la contraseña de 16 letras generada (sin espacios) en el campo "Contraseña de Aplicación" de abajo.</li>
-                    </ol>
-                </div>
-
-                <div class="glass-card">
-                    <h5 class="fw-bold mb-4">Credenciales SMTP</h5>
+                <div class="dashboard-card mb-4">
+                    <h5 class="fw-bold font-heading mb-4 border-bottom pb-3">Credenciales SMTP</h5>
                     
-                    <form method="post" class="row g-3">
+                    <form method="post" class="row g-4">
                         {% csrf_token %}
                         
                         <div class="col-md-12">
-                            <label for="{{ form.email_host_user.id_for_label }}" class="form-label fw-bold">Correo de Gmail</label>
+                            <label for="{{ form.email_host_user.id_for_label }}" class="form-label fw-semibold text-muted small">Dirección de Gmail</label>
                             {{ form.email_host_user }}
                             {% if form.email_host_user.help_text %}
-                            <small class="text-muted d-block mt-1">{{ form.email_host_user.help_text }}</small>
+                            <small class="text-muted d-block mt-1"><i class="bi bi-info-circle me-1"></i>{{ form.email_host_user.help_text }}</small>
                             {% endif %}
-                            <div class="text-danger small">{{ form.email_host_user.errors }}</div>
+                            <div class="text-danger small mt-1">{{ form.email_host_user.errors }}</div>
                         </div>
                         
                         <div class="col-md-12">
-                            <label for="{{ form.email_host_password.id_for_label }}" class="form-label fw-bold">Contraseña de Aplicación</label>
+                            <label for="{{ form.email_host_password.id_for_label }}" class="form-label fw-semibold text-muted small">Contraseña de Aplicación</label>
                             <div class="input-group">
                                 {{ form.email_host_password }}
-                                <button class="btn btn-outline-secondary" type="button" onclick="toggleSMTPPassword()">
-                                    <i class="fas fa-eye" id="toggleSMTPIcon"></i>
+                                <button class="btn btn-outline-secondary border-start-0" style="border-color: var(--border-color);" type="button" onclick="toggleSMTPPassword()">
+                                    <i class="bi bi-eye" id="toggleSMTPIcon"></i>
                                 </button>
                             </div>
                             {% if form.email_host_password.help_text %}
-                            <small class="text-muted d-block mt-1">{{ form.email_host_password.help_text }}</small>
+                            <small class="text-muted d-block mt-1"><i class="bi bi-info-circle me-1"></i>{{ form.email_host_password.help_text }}</small>
                             {% endif %}
-                            <div class="text-danger small">{{ form.email_host_password.errors }}</div>
+                            <div class="text-danger small mt-1">{{ form.email_host_password.errors }}</div>
                         </div>
 
-                        <div class="col-12 mt-4 text-end">
-                            <button type="submit" class="btn btn-primary-custom">
-                                <i class="fas fa-save me-2"></i>Guardar Configuración
+                        <div class="col-12 text-end mt-2">
+                            <button type="submit" class="btn-inmobiliaria btn-primary-inmobiliaria px-4 py-2">
+                                <i class="bi bi-check2 me-2"></i> Guardar Configuración
                             </button>
                         </div>
                     </form>
@@ -119,10 +113,15 @@
             </div>
             
             <div class="col-lg-4">
-                <div class="glass-card text-center py-5">
-                    <i class="fab fa-google text-danger fs-1 mb-3"></i>
-                    <h5 class="fw-bold">Integración Segura</h5>
-                    <p class="text-muted small">Tus credenciales se almacenan en la base de datos de tu servidor local. Nunca compartas tu contraseña de aplicación.</p>
+                <div class="dashboard-card bg-primary bg-opacity-10 border-primary border-opacity-25 mb-4">
+                    <h5 class="fw-bold font-heading text-primary mb-3 d-flex align-items-center gap-2"><i class="bi bi-info-circle"></i> Configuración de Gmail</h5>
+                    <p class="text-dark opacity-75 small mb-3">Google requiere Contraseñas de Aplicación por seguridad:</p>
+                    <ol class="text-dark opacity-75 small ps-3 mb-0">
+                        <li class="mb-2">Ve a tu Cuenta de Google > <strong>Seguridad</strong>.</li>
+                        <li class="mb-2">Habilita la <strong>Verificación en 2 Pasos</strong>.</li>
+                        <li class="mb-2">Crea una <strong>Contraseña de Aplicación</strong>.</li>
+                        <li>Pega el código de 16 caracteres aquí.</li>
+                    </ol>
                 </div>
             </div>
         </div>
@@ -133,10 +132,13 @@
 <script>
     // --- Configuración Email ---
     document.addEventListener("DOMContentLoaded", function() {
-        const inputs = document.querySelectorAll("input");
+        const inputs = document.querySelectorAll("form input");
         inputs.forEach(input => {
             if(input.type !== "hidden" && input.type !== "submit" && input.name !== "csrfmiddlewaretoken") {
-                input.classList.add("form-control");
+                input.classList.add("form-control-inmobiliaria");
+                if(input.name === "email_host_password") {
+                    input.classList.add("border-end-0");
+                }
                 if(input.name === "email_host_password" && !input.value) {
                     input.type = "password";
                 } else if(input.name === "email_host_password" && input.value) {
@@ -155,10 +157,10 @@
         const icon = document.getElementById('toggleSMTPIcon');
         if (pwd.type === 'password') {
             pwd.type = 'text';
-            icon.classList.replace('fa-eye', 'fa-eye-slash');
+            icon.classList.replace('bi-eye', 'bi-eye-slash');
         } else {
             pwd.type = 'password';
-            icon.classList.replace('fa-eye-slash', 'fa-eye');
+            icon.classList.replace('bi-eye-slash', 'bi-eye');
         }
     }
 
@@ -179,7 +181,7 @@
             text: text,
             width: 256,
             height: 256,
-            colorDark : "#000000",
+            colorDark : "#1E293B",
             colorLight : "#ffffff",
             correctLevel : QRCode.CorrectLevel.H
         });
@@ -203,11 +205,11 @@
             .then(data => {
                 const statusLabel = document.getElementById('ws-status');
                 if(data.error) {
-                    statusLabel.innerHTML = `<span class="text-danger"><i class="fas fa-exclamation-triangle"></i> Error: Node.js gateway no responde.</span>`;
+                    statusLabel.innerHTML = `<span class="text-danger"><i class="bi bi-exclamation-triangle"></i> Error: Node.js gateway is unresponsive.</span>`;
                     return;
                 }
                 
-                statusLabel.innerText = "Estado: " + data.status;
+                statusLabel.innerText = "Status: " + data.status;
                 
                 if (data.status === 'connected') {
                     showConnected();
@@ -218,7 +220,7 @@
                 }
             })
             .catch(err => {
-                document.getElementById('ws-status').innerHTML = `<span class="text-danger"><i class="fas fa-exclamation-triangle"></i> Gateway desconectado.</span>`;
+                document.getElementById('ws-status').innerHTML = `<span class="text-danger"><i class="bi bi-exclamation-triangle"></i> Gateway disconnected.</span>`;
             });
     }
 
@@ -230,7 +232,7 @@
     }
 
     function unlinkWhatsApp() {
-        if(!confirm("¿Seguro que deseas desvincular el dispositivo de WhatsApp actual?")) return;
+        if(!confirm("Are you sure you want to unlink the current WhatsApp device?")) return;
         showLoading();
         fetch("{% url 'whatsapp_proxy_unlink' %}", { method: 'POST' })
             .then(res => res.json())

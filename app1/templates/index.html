@@ -1,506 +1,625 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inmobiliaria Premium - Encuentra tu hogar ideal</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --primary: #2563EB;
-            --primary-dark: #1E40AF;
-            --secondary: #10B981;
-            --dark: #0F172A;
-            --light: #F8FAFC;
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            color: #334155;
-            background-color: var(--light);
-            overflow-x: hidden;
-        }
-        
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Outfit', sans-serif;
-            color: var(--dark);
-        }
+{% extends 'base_public.html' %}
+{% load static %}
 
-        /* Navbar */
-        .navbar {
-            background-color: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            padding: 1rem 0;
-            transition: all 0.3s ease;
-        }
-        
-        .navbar-brand {
-            font-weight: 800;
-            font-size: 1.5rem;
-            color: var(--primary) !important;
-            letter-spacing: -0.5px;
-        }
+{% block title %}Inmobiliaria - Discover Spaces That Feel Like Home{% endblock %}
 
-        /* Hero Section */
-        .hero {
-            position: relative;
-            padding: 160px 0 100px;
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(37, 99, 235, 0.8) 100%), url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
-            color: white;
-            min-height: 85vh;
-            display: flex;
+{% block extra_css %}
+<style>
+    /* Global Page Background */
+    body {
+        background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+    }
+
+    /* Hero Section */
+    .hero-container {
+        padding-top: 1rem;
+        padding-bottom: 5rem;
+    }
+    
+    .hero-inmobiliaria {
+        position: relative;
+        background: #FFFFFF;
+        border-radius: 2.5rem;
+        margin: 0 auto;
+        max-width: 1400px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+    }
+    
+    .hero-content {
+        padding: 6rem 4rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(79, 70, 229, 0.1);
+        color: var(--primary);
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-full);
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 1.5rem;
+        width: fit-content;
+    }
+    
+    .hero-inmobiliaria h1 {
+        color: var(--text-main);
+        font-size: 4.5rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        letter-spacing: -1px;
+    }
+    
+    .hero-inmobiliaria h1 span {
+        color: var(--primary);
+    }
+    
+    .hero-inmobiliaria p {
+        font-size: 1.25rem;
+        color: var(--text-muted);
+        max-width: 500px;
+        margin-bottom: 2rem;
+    }
+
+    .hero-image-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .hero-image {
+        width: 100%;
+        height: 600px;
+        object-fit: cover;
+        border-radius: 1.5rem;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .trusted-badge {
+        position: absolute;
+        top: 3rem;
+        right: 3rem;
+        background: white;
+        border-radius: 999px;
+        padding: 0.5rem 1.25rem 0.5rem 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        box-shadow: var(--shadow-md);
+        z-index: 10;
+    }
+
+    .avatars {
+        display: flex;
+    }
+
+    .avatars img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 2px solid white;
+        object-fit: cover;
+    }
+
+    .avatars img:not(:first-child) {
+        margin-left: -12px;
+    }
+
+    /* Search Bar (Floating) */
+    .search-wrapper {
+        position: absolute;
+        bottom: -35px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 1100px;
+        z-index: 20;
+    }
+
+    .search-bar-glass {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 999px;
+        padding: 0.5rem;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+        border: 1px solid rgba(255,255,255,1);
+    }
+
+    .search-field {
+        flex: 1;
+        padding: 0.75rem 1.5rem;
+        border-right: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .search-field:last-of-type {
+        border-right: none;
+    }
+
+    .search-icon-wrapper {
+        width: 36px;
+        height: 36px;
+        background: rgba(79, 70, 229, 0.1);
+        color: var(--primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+    }
+
+    .search-field-content {
+        flex: 1;
+    }
+
+    .search-field-content label {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        font-weight: 500;
+        margin-bottom: 0.2rem;
+    }
+
+    .search-field-content select, .search-field-content input {
+        border: none;
+        background: transparent;
+        font-weight: 700;
+        color: var(--text-main);
+        width: 100%;
+        outline: none;
+        padding: 0;
+        font-size: 1rem;
+        font-family: var(--font-body);
+        cursor: pointer;
+    }
+
+    .btn-search {
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 999px;
+        padding: 1rem 2.5rem;
+        font-weight: 600;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.39);
+        transition: var(--transition);
+        height: 100%;
+    }
+    
+    .btn-search:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        color: white;
+    }
+
+    /* About Section */
+    .about-image {
+        width: 100%;
+        border-radius: 1.5rem;
+        object-fit: cover;
+        height: 500px;
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .check-list li {
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--text-main);
+        font-weight: 500;
+    }
+    .check-list i {
+        color: var(--primary);
+        font-size: 1.25rem;
+        background: rgba(79, 70, 229, 0.1);
+        border-radius: 50%;
+        padding: 2px;
+    }
+
+    /* Features Badges */
+    .feature-badge-card {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: var(--shadow-sm);
+        border: none;
+        transition: var(--transition);
+        height: 100%;
+    }
+    .feature-badge-card:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-3px);
+    }
+    .feature-icon-wrapper-large {
+        width: 50px;
+        height: 50px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    /* Steps Section */
+    .step-item {
+        text-align: center;
+        position: relative;
+        padding: 2rem;
+        background: white;
+        border-radius: 1.5rem;
+        box-shadow: var(--shadow-sm);
+        height: 100%;
+    }
+
+    .step-icon {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        color: white;
+        box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
+        margin: 0 auto 1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    @media (max-width: 1024px) {
+        .hero-inmobiliaria {
+            grid-template-columns: 1fr;
+            padding-bottom: 3rem;
+        }
+        .hero-content {
+            padding: 4rem 2rem 2rem;
             align-items: center;
-        }
-        
-        .hero h1 {
-            color: white;
-            font-size: 4rem;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            animation: fadeInUp 1s ease;
-        }
-        
-        .hero p {
-            font-size: 1.25rem;
-            font-weight: 300;
-            opacity: 0.9;
-            margin-bottom: 2.5rem;
-            animation: fadeInUp 1s ease 0.2s;
-            animation-fill-mode: both;
-        }
-
-        /* Stats Bar */
-        .stats-wrapper {
-            background: white;
-            border-radius: 1rem;
-            padding: 2rem;
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-            transform: translateY(-50%);
-            position: relative;
-            z-index: 10;
-        }
-        
-        .stat-item h3 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 0.25rem;
-        }
-        
-        .stat-item p {
-            color: #64748B;
-            font-weight: 500;
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.85rem;
-        }
-
-        /* Featured Properties */
-        .section-title {
             text-align: center;
-            margin-bottom: 4rem;
         }
-        
-        .section-title h2 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            position: relative;
-            display: inline-block;
+        .hero-inmobiliaria h1 {
+            font-size: 3.5rem;
+        }
+        .hero-image-wrapper {
+            padding: 0 1.5rem 1.5rem;
+        }
+        .hero-image {
+            height: 450px;
+        }
+        .search-wrapper {
+            bottom: -80px; /* Adjust for stacked search bar */
+        }
+        .hero-container {
+            padding-bottom: 8rem;
+        }
+        .search-bar-glass {
+            flex-direction: column;
+            border-radius: 1.5rem;
+            padding: 1rem;
+        }
+        .search-field {
+            width: 100%;
+            border-right: none;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+        }
+        .search-field:last-of-type {
+            border-bottom: none;
             margin-bottom: 1rem;
         }
-        
-        .property-card {
-            background: white;
-            border-radius: 1.25rem;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            transition: all 0.4s ease;
-            height: 100%;
-            border: 1px solid #E2E8F0;
-        }
-        
-        .property-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
-        }
-        
-        .property-img-wrapper {
-            position: relative;
-            height: 280px;
-            overflow: hidden;
-        }
-        
-        .property-img {
+        .btn-search {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-        
-        .property-card:hover .property-img {
-            transform: scale(1.05);
-        }
-        
-        .property-badge {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            background: var(--primary);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 2rem;
-            font-weight: 600;
-            font-size: 0.85rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        .property-price {
-            position: absolute;
-            bottom: -1.5rem;
-            right: 1.5rem;
-            background: var(--secondary);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 2rem;
-            font-weight: 700;
-            font-size: 1.25rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            font-family: 'Outfit', sans-serif;
-        }
-
-        /* Trust Section */
-        .trust-section {
-            background-color: white;
-            padding: 6rem 0;
-            border-top: 1px solid #E2E8F0;
-            border-bottom: 1px solid #E2E8F0;
-        }
-        
-        .trust-icon {
-            width: 80px;
-            height: 80px;
-            background: rgba(37, 99, 235, 0.1);
-            color: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            margin: 0 auto 1.5rem;
-            transition: all 0.3s ease;
         }
-        
-        .trust-item:hover .trust-icon {
-            background: var(--primary);
-            color: white;
-            transform: scale(1.1) rotate(5deg);
-        }
+    }
+</style>
+{% endblock %}
 
-        /* CTA Section */
-        .cta-section {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            padding: 5rem 0;
-            color: white;
-            text-align: center;
-            border-radius: 2rem;
-            margin: 4rem auto;
-            max-width: 1200px;
-            box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.25);
-        }
-
-        /* Buttons */
-        .btn-custom {
-            padding: 1rem 2.5rem;
-            border-radius: 3rem;
-            font-weight: 600;
-            font-family: 'Outfit', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary-custom {
-            background-color: var(--primary);
-            color: white;
-            border: 2px solid var(--primary);
-        }
-        
-        .btn-primary-custom:hover {
-            background-color: transparent;
-            color: var(--primary);
-        }
-        
-        .btn-light-custom {
-            background-color: white;
-            color: var(--primary-dark);
-            border: 2px solid white;
-        }
-        
-        .btn-light-custom:hover {
-            background-color: transparent;
-            color: white;
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Footer */
-        footer {
-            background: var(--dark);
-            color: #94A3B8;
-            padding: 4rem 0 2rem;
-        }
-        
-        footer h5 {
-            color: white;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <i class="fas fa-cube me-2 fs-3"></i> 
-                LUXE<span class="text-dark">ESTATES</span>
-            </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-toggle="target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto font-weight-bold">
-                    <li class="nav-item"><a class="nav-link text-dark fw-medium px-3" href="#inicio">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark fw-medium px-3" href="#destacados">Propiedades</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark fw-medium px-3" href="#confianza">Por qué elegirnos</a></li>
-                </ul>
-                <div class="d-flex gap-3 align-items-center">
-                    <a href="{% url 'propiedades_publica' %}" class="text-decoration-none fw-semibold text-primary">Ver Catálogo</a>
-                    <a href="{% url 'login' %}" class="btn btn-dark rounded-pill px-4 py-2 fw-semibold shadow-sm">
-                        <i class="fas fa-lock me-2 small"></i>Portal
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
+{% block content %}
     <!-- Hero Section -->
-    <section class="hero" id="inicio">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-xl-7">
-                    <span class="badge bg-white text-primary px-3 py-2 rounded-pill mb-4 shadow-sm fw-bold border" style="animation: fadeInUp 1s ease; display: inline-block;">
-                        <i class="fas fa-star text-warning me-1"></i> La Agencia #1 en Transparencia
-                    </span>
-                    <h1>Encuentra el hogar que define tu estilo de vida.</h1>
-                    <p>Más que metros cuadrados, vendemos experiencias. Descubre las propiedades más exclusivas y deja que nuestro sistema inteligente de matching encuentre la coincidencia perfecta para ti.</p>
-                    
-                    <div class="d-flex flex-wrap gap-3" style="animation: fadeInUp 1s ease 0.4s; animation-fill-mode: both;">
-                        <a href="{% url 'propiedades_publica' %}" class="btn btn-custom btn-primary-custom shadow-lg">
-                            Explorar Catálogo
-                        </a>
-                        <a href="#confianza" class="btn btn-custom btn-light-custom">
-                            Conocer Más
-                        </a>
+    <div class="container-fluid px-2 px-md-4 hero-container">
+        <section class="hero-inmobiliaria">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="bi bi-house"></i> Sueña • Busca • Adquiere
+                </div>
+                <h1>Descubre Espacios<br>Que Se Sienten Como <span>Casa</span></h1>
+                <p>Encuentra propiedades seleccionadas para alquiler o venta que se adapten a tu estilo de vida y presupuesto.</p>
+            </div>
+            <div class="hero-image-wrapper">
+                <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=80" alt="Hogar Moderno" class="hero-image">
+                
+                <div class="trusted-badge">
+                    <div class="avatars">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Usuario 1">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Usuario 2">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Usuario 3">
+                    </div>
+                    <div class="lh-sm">
+                        <div class="fw-bold text-dark" style="font-size: 0.85rem;">Con la confianza de +25K</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">Familias Felices</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Bar (Floating) -->
+            <div class="search-wrapper">
+                <form class="search-bar-glass" method="GET" action="{% url 'propiedades_publica' %}">
+                    <div class="search-field">
+                        <div class="search-icon-wrapper">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+                        <div class="search-field-content">
+                            <label>Ubicación</label>
+                            <input type="text" name="ubicacion" placeholder="Ej. Buenos Aires" value="">
+                        </div>
+                        <i class="bi bi-chevron-down text-muted small" style="opacity:0;"></i>
+                    </div>
+                    <div class="search-field">
+                        <div class="search-icon-wrapper">
+                            <i class="bi bi-house"></i>
+                        </div>
+                        <div class="search-field-content">
+                            <label>Tipo de Propiedad</label>
+                            <select name="tipo">
+                                <option value="Cualquier Tipo">Cualquier Tipo</option>
+                                <option value="Casa">Casa</option>
+                                <option value="Departamento">Departamento</option>
+                                <option value="Lote">Lote</option>
+                                <option value="Comercial">Comercial</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="search-field">
+                        <div class="search-icon-wrapper">
+                            <i class="bi bi-currency-dollar"></i>
+                        </div>
+                        <div class="search-field-content">
+                            <label>Rango de Precio</label>
+                            <select name="precio">
+                                <option value="Cualquier Precio">Cualquier Precio</option>
+                                <option value="0-1000">Hasta $1,000</option>
+                                <option value="1000-5000">$1,000 - $5,000</option>
+                                <option value="5000-10000">$5,000 - $10,000</option>
+                                <option value="10000-">$10,000+</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="ps-2 pe-1 py-1">
+                        <button type="submit" class="btn-search">
+                            <i class="bi bi-search"></i> Buscar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <!-- Features Marquee -->
+    <section class="mt-5 pt-5 mb-5" id="servicios">
+        <div class="marquee-container">
+            <div class="marquee-track">
+                <!-- Set 1 -->
+                <div class="marquee-item">
+                    <div class="feature-badge-card">
+                        <img src="{% static 'img/features/feat_verified.jpg' %}" alt="Propiedades Verificadas" class="feature-image">
+                        <div class="feature-text-content">
+                            <h5 class="fw-bold mb-2 text-dark font-heading">Propiedades Verificadas</h5>
+                            <p class="text-muted small mb-0">Todas las propiedades son verificadas minuciosamente para garantizar tu total tranquilidad.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="marquee-item">
+                    <div class="feature-badge-card">
+                        <img src="{% static 'img/features/feat_safe.jpg' %}" alt="Seguro y Confiable" class="feature-image">
+                        <div class="feature-text-content">
+                            <h5 class="fw-bold mb-2 text-dark font-heading">Seguro y Confiable</h5>
+                            <p class="text-muted small mb-0">Tu seguridad y privacidad son nuestra máxima prioridad en cada etapa de la transacción.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="marquee-item">
+                    <div class="feature-badge-card">
+                        <img src="{% static 'img/features/feat_support.jpg' %}" alt="Soporte 24/7" class="feature-image">
+                        <div class="feature-text-content">
+                            <h5 class="fw-bold mb-2 text-dark font-heading">Soporte 24/7</h5>
+                            <p class="text-muted small mb-0">Nuestro equipo de expertos está siempre disponible para ayudarte en cualquier momento.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="marquee-item">
+                    <div class="feature-badge-card">
+                        <img src="{% static 'img/features/feat_price.jpg' %}" alt="Mejor Precio Garantizado" class="feature-image">
+                        <div class="feature-text-content">
+                            <h5 class="fw-bold mb-2 text-dark font-heading">Mejor Precio Garantizado</h5>
+                            <p class="text-muted small mb-0">Consigue siempre las mejores ofertas y valorizaciones al mejor precio del mercado inmobiliario.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Set 2 (Duplicate for infinite scroll) -->
+                <div class="marquee-item">
+                    <div class="feature-badge-card">
+                        <img src="{% static 'img/features/feat_verified.jpg' %}" alt="Propiedades Verificadas" class="feature-image">
+                        <div class="feature-text-content">
+                            <h5 class="fw-bold mb-2 text-dark font-heading">Propiedades Verificadas</h5>
+                            <p class="text-muted small mb-0">Todas las propiedades son verificadas minuciosamente para garantizar tu total tranquilidad.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="marquee-item">
+                    <div class="feature-badge-card">
+                        <img src="{% static 'img/features/feat_safe.jpg' %}" alt="Seguro y Confiable" class="feature-image">
+                        <div class="feature-text-content">
+                            <h5 class="fw-bold mb-2 text-dark font-heading">Seguro y Confiable</h5>
+                            <p class="text-muted small mb-0">Tu seguridad y privacidad son nuestra máxima prioridad en cada etapa de la transacción.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="marquee-item">
+                    <div class="feature-badge-card">
+                        <img src="{% static 'img/features/feat_support.jpg' %}" alt="Soporte 24/7" class="feature-image">
+                        <div class="feature-text-content">
+                            <h5 class="fw-bold mb-2 text-dark font-heading">Soporte 24/7</h5>
+                            <p class="text-muted small mb-0">Nuestro equipo de expertos está siempre disponible para ayudarte en cualquier momento.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="marquee-item">
+                    <div class="feature-badge-card">
+                        <img src="{% static 'img/features/feat_price.jpg' %}" alt="Mejor Precio Garantizado" class="feature-image">
+                        <div class="feature-text-content">
+                            <h5 class="fw-bold mb-2 text-dark font-heading">Mejor Precio Garantizado</h5>
+                            <p class="text-muted small mb-0">Consigue siempre las mejores ofertas y valorizaciones al mejor precio del mercado inmobiliario.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="container" style="margin-top: -50px; z-index: 20; position: relative;">
-        <div class="stats-wrapper">
-            <div class="row text-center g-4">
-                <div class="col-md-4 stat-item border-end d-none d-md-block">
-                    <h3>15+</h3>
-                    <p>Años de Experiencia</p>
-                </div>
-                <div class="col-md-4 stat-item border-end d-none d-md-block">
-                    <h3>$50M+</h3>
-                    <p>Volumen Gestionado</p>
-                </div>
-                <div class="col-md-4 stat-item">
-                    <h3>98%</h3>
-                    <p>Clientes Satisfechos</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Trust / Features Section -->
-    <section class="trust-section" id="confianza">
-        <div class="container py-5">
-            <div class="section-title">
-                <h2>¿Por qué confiar en nosotros?</h2>
-                <p class="text-muted fs-5 mt-3 max-w-2xl mx-auto">Nuestro compromiso es brindarte seguridad, transparencia y agilidad en cada paso de tu inversión inmobiliaria.</p>
-            </div>
-            
-            <div class="row g-5 text-center">
-                <div class="col-md-4 trust-item">
-                    <div class="trust-icon shadow-sm">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h4 class="fw-bold mb-3">Transacciones Seguras</h4>
-                    <p class="text-muted">Garantizamos auditorías legales en cada propiedad para que tu inversión esté 100% protegida contra fraudes.</p>
-                </div>
+    <!-- Why Choose Inmobiliaria -->
+    <section class="container py-5 my-5" id="about">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-5">
+                <span class="text-primary fw-bold text-uppercase small letter-spacing-1">Por qué elegir Inmobiliaria</span>
+                <h2 class="display-5 fw-extrabold mt-2 mb-4 text-dark" style="letter-spacing: -1px;">Más Que Solo<br>Una Propiedad</h2>
+                <p class="text-muted fs-5 mb-4">Ofrecemos más que solo espacios. Entregamos experiencias que se adaptan a tu vida y tu futuro.</p>
                 
-                <div class="col-md-4 trust-item">
-                    <div class="trust-icon shadow-sm">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <h4 class="fw-bold mb-3">Smart Matching</h4>
-                    <p class="text-muted">Nuestro CRM analiza tus preferencias en tiempo real y te notifica automáticamente cuando entra una propiedad ideal.</p>
-                </div>
+                <ul class="list-unstyled check-list mb-4">
+                    <li><i class="bi bi-check-circle-fill"></i> Amplia gama de opciones premium en venta o alquiler</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Términos flexibles y procesos transparentes</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Recomendaciones personalizadas a tu medida</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Respaldados por miles de clientes felices</li>
+                </ul>
                 
-                <div class="col-md-4 trust-item">
-                    <div class="trust-icon shadow-sm">
-                        <i class="fas fa-handshake"></i>
-                    </div>
-                    <h4 class="fw-bold mb-3">Acompañamiento Total</h4>
-                    <p class="text-muted">Desde la primera visita hasta la firma de las escrituras. Asesoramiento financiero y notarial incluido.</p>
-                </div>
+                <a href="#about" class="btn-inmobiliaria btn-primary-inmobiliaria" style="background-color: #1E1B4B; color: white;">Saber Más <i class="bi bi-arrow-right ms-2"></i></a>
+            </div>
+            <div class="col-lg-7">
+                <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=80" alt="Beautiful Interior" class="about-image">
             </div>
         </div>
     </section>
 
     <!-- Featured Properties -->
-    <section class="py-5 my-5" id="destacados">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-end mb-5">
-                <div class="section-title mb-0 text-start">
-                    <h2>Propiedades Exclusivas</h2>
-                    <p class="text-muted fs-5 mt-2">Recién ingresadas al mercado. Oportunidades únicas.</p>
-                </div>
-                <a href="{% url 'propiedades_publica' %}" class="btn btn-outline-primary rounded-pill fw-semibold px-4 d-none d-md-inline-block">Ver todo el inventario <i class="fas fa-arrow-right ms-2"></i></a>
-            </div>
-
-            <div class="row g-4">
-                {% for propiedad in propiedades_destacadas %}
-                <div class="col-lg-4 col-md-6">
-                    <div class="property-card d-flex flex-column">
-                        <div class="property-img-wrapper">
-                            {% if propiedad.get_portada %}
-                                <img src="{{ propiedad.get_portada.url }}" alt="{{ propiedad.titulo }}" class="property-img">
-                            {% else %}
-                                <div class="w-100 h-100 bg-light d-flex align-items-center justify-content-center text-secondary">
-                                    <i class="fas fa-image fs-1"></i>
-                                </div>
-                            {% endif %}
-                            <span class="property-badge">{{ propiedad.tipo_operacion }}</span>
-                            <span class="property-price">${{ propiedad.precio }}</span>
+    <section class="container py-5">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <h2 class="fw-bold mb-0 text-dark">Propiedades Destacadas</h2>
+            <a href="{% url 'propiedades_publica' %}" class="text-dark fw-semibold text-decoration-none d-none d-md-block">Ver Todas <i class="bi bi-arrow-right ms-1"></i></a>
+        </div>
+        
+        <div class="row g-4">
+            {% for propiedad in propiedades|slice:":3" %}
+            <div class="col-lg-4 col-md-6">
+                <div class="property-card-inmobiliaria">
+                    <div class="property-card-img-wrapper">
+                        {% if propiedad.get_portada %}
+                            <img src="{{ propiedad.get_portada.url }}" alt="{{ propiedad.titulo }}" class="property-card-img" onerror="this.onerror=null;this.style.display='none';this.nextElementSibling.style.display='flex';">
+                            <div class="property-card-img placeholder-fallback" style="display:none;"><i class="bi bi-house-door"></i></div>
+                        {% else %}
+                            <div class="property-card-img placeholder-fallback"><i class="bi bi-house-door"></i></div>
+                        {% endif %}
+                        <span class="property-badge-floating badge-featured">Destacada</span>
+                        <button class="property-fav-btn"><i class="bi bi-heart"></i></button>
+                    </div>
+                    <div class="property-card-body">
+                        <h3 class="property-title">{{ propiedad.titulo }}</h3>
+                        <div class="property-location"><i class="bi bi-geo-alt"></i> {{ propiedad.zona }}, {{ propiedad.direccion }}</div>
+                        <div class="property-features">
+                            <span><i class="bi bi-moon"></i> {{ propiedad.habitaciones }} Hab</span>
+                            <span><i class="bi bi-droplet"></i> {{ propiedad.banos }} Baños</span>
+                            <span><i class="bi bi-bounding-box"></i> {{ propiedad.superficie }} m²</span>
                         </div>
-                        
-                        <div class="p-4 pt-5 mt-2 flex-grow-1 d-flex flex-column">
-                            <h5 class="fw-bold mb-2">{{ propiedad.titulo|truncatechars:45 }}</h5>
-                            <p class="text-muted small mb-4"><i class="fas fa-map-marker-alt text-primary me-2"></i>{{ propiedad.zona }} - {{ propiedad.direccion }}</p>
-                            
-                            <div class="d-flex justify-content-between align-items-center mt-auto border-top pt-3 text-secondary small fw-medium">
-                                <span><i class="fas fa-bed me-2"></i>{{ propiedad.habitaciones }} Hab</span>
-                                <span><i class="fas fa-bath me-2"></i>{{ propiedad.banos }} Baños</span>
-                                <span><i class="fas fa-ruler-combined me-2"></i>{{ propiedad.superficie }} m²</span>
-                            </div>
+                        <div class="property-card-footer mt-auto">
+                            <div class="property-price">${{ propiedad.precio }} <span>/ mes</span></div>
+                            <a href="{% url 'detalle_propiedad_publica' propiedad.pk %}" class="btn btn-sm text-white rounded-pill px-4 py-2 fw-semibold" style="background-color: #1E1B4B;">Ver Detalles</a>
                         </div>
                     </div>
                 </div>
-                {% empty %}
-                <div class="col-12 text-center py-5">
-                    <i class="fas fa-home text-muted fs-1 mb-3"></i>
-                    <h4 class="text-muted">Aún no hay propiedades destacadas.</h4>
-                </div>
-                {% endfor %}
             </div>
-            
-            <div class="text-center mt-5 d-md-none">
-                <a href="{% url 'propiedades_publica' %}" class="btn btn-primary rounded-pill fw-semibold px-5 w-100 py-3">Ver todo el inventario</a>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4 d-md-none">
+            <a href="{% url 'propiedades_publica' %}" class="text-dark fw-semibold text-decoration-none">Ver Todas <i class="bi bi-arrow-right ms-1"></i></a>
+        </div>
+    </section>
+
+    <!-- How it Works -->
+    <section class="container py-5 my-5">
+        <div class="text-center mb-5">
+            <span class="text-primary fw-bold text-uppercase small letter-spacing-1">Cómo Funciona</span>
+            <h2 class="fw-bold mt-2 text-dark">Encuentra tu hogar ideal en 3 sencillos pasos</h2>
+        </div>
+        
+        <div class="row position-relative g-4">
+            <div class="col-md-4">
+                <div class="step-item">
+                    <div class="step-icon"><i class="bi bi-search"></i></div>
+                    <h5 class="fw-bold text-dark">Busca y Explora</h5>
+                    <p class="text-muted small">Explora miles de propiedades verificadas en tu ubicación deseada.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-item">
+                    <div class="step-icon"><i class="bi bi-house-door"></i></div>
+                    <h5 class="fw-bold text-dark">Elige tu Propiedad</h5>
+                    <p class="text-muted small">Compara opciones y encuentra el espacio perfecto para tu estilo de vida.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-item">
+                    <div class="step-icon"><i class="bi bi-key"></i></div>
+                    <h5 class="fw-bold text-dark">Múdate y Disfruta</h5>
+                    <p class="text-muted small">Completa el proceso y comienza tu nueva etapa con total confianza.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <div class="container px-3">
-        <section class="cta-section">
-            <h2 class="text-white mb-4" style="font-size: 3rem;">¿Buscas vender tu propiedad?</h2>
-            <p class="fs-5 mb-5 opacity-75 max-w-2xl mx-auto px-4">Conectamos tu inmueble con nuestra extensa base de clientes pre-calificados a través de nuestro sistema de Matching automático.</p>
-            <a href="#" class="btn btn-custom btn-light-custom shadow-lg">Quiero que me contacten</a>
-        </section>
-    </div>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-lg-4 mb-4">
-                    <h4 class="text-white fw-bold mb-4"><i class="fas fa-cube text-primary me-2"></i>LUXE ESTATES</h4>
-                    <p class="opacity-75">Redefiniendo el estándar en el mercado inmobiliario mediante tecnología y servicio excepcional.</p>
-                    <div class="d-flex gap-3 mt-4">
-                        <a href="#" class="text-white bg-secondary bg-opacity-25 rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-white bg-secondary bg-opacity-25 rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-white bg-secondary bg-opacity-25 rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-                
-                <div class="col-lg-2 col-md-4">
-                    <h5>Navegación</h5>
-                    <ul class="list-unstyled opacity-75">
-                        <li class="mb-2"><a href="#inicio" class="text-decoration-none text-reset">Inicio</a></li>
-                        <li class="mb-2"><a href="{% url 'propiedades_publica' %}" class="text-decoration-none text-reset">Catálogo</a></li>
-                        <li class="mb-2"><a href="#confianza" class="text-decoration-none text-reset">Nosotros</a></li>
-                    </ul>
-                </div>
-                
-                <div class="col-lg-3 col-md-4">
-                    <h5>Legal</h5>
-                    <ul class="list-unstyled opacity-75">
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-reset">Términos de Servicio</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-reset">Aviso de Privacidad</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-reset">Cookies</a></li>
-                    </ul>
-                </div>
-                
-                <div class="col-lg-3 col-md-4">
-                    <h5>Contacto</h5>
-                    <ul class="list-unstyled opacity-75">
-                        <li class="mb-3"><i class="fas fa-map-marker-alt me-2 text-primary"></i> Av. Empresarial 123, Ciudad</li>
-                        <li class="mb-3"><i class="fas fa-phone-alt me-2 text-primary"></i> +1 (555) 123-4567</li>
-                        <li class="mb-3"><i class="fas fa-envelope me-2 text-primary"></i> contacto@luxe-estates.com</li>
-                    </ul>
+    <!-- Bottom CTA -->
+    <section class="container px-3 mb-5 pb-5 mt-4">
+        <div class="rounded-5 p-5 p-md-5 d-flex flex-column flex-md-row align-items-md-center justify-content-between text-start position-relative overflow-hidden shadow-xl" style="background-color: #0B0F19; min-height: 320px;">
+            <!-- Background Image with Soft Fade -->
+            <div class="position-absolute top-0 end-0 h-100 w-100" style="background: url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80') center/cover; opacity: 0.35; mask-image: linear-gradient(270deg, black 0%, transparent 100%); -webkit-mask-image: linear-gradient(270deg, black 0%, transparent 100%);"></div>
+            
+            <!-- Floating Decorative Glows -->
+            <div class="position-absolute" style="top: -50%; left: -10%; width: 500px; height: 500px; background: radial-gradient(circle, var(--primary) 0%, transparent 70%); opacity: 0.25; filter: blur(40px);"></div>
+            <div class="position-absolute" style="bottom: -50%; right: 20%; width: 300px; height: 300px; background: radial-gradient(circle, #D946EF 0%, transparent 70%); opacity: 0.15; filter: blur(40px);"></div>
+            
+            <div class="position-relative z-index-1 text-white mb-4 mb-md-0 d-flex flex-column flex-md-row align-items-md-center gap-4">
+                <div>
+                    <h2 class="display-5 fw-extrabold mb-2 font-heading text-white" style="letter-spacing: -1px;">¿Listo para encontrar<br>tu hogar ideal?</h2>
+                    <p class="mb-0 fs-5 mt-3" style="color: rgba(255,255,255,0.85); max-width: 500px; line-height: 1.5;">Únete a las miles de familias felices que ya encontraron su espacio perfecto con Inmobiliaria.</p>
                 </div>
             </div>
-            
-            <div class="border-top border-secondary mt-5 pt-4 text-center opacity-50 small">
-                <p class="mb-0">&copy; 2026 Luxe Estates CRM. Todos los derechos reservados.</p>
+            <div class="position-relative z-index-1 mt-4 mt-md-0 d-flex justify-content-start">
+                <a href="{% url 'propiedades_publica' %}" class="btn-cta-premium">
+                    Ver Propiedades <i class="bi bi-arrow-right ms-2 fs-5"></i>
+                </a>
             </div>
         </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Navbar blur on scroll
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 50) {
-                document.querySelector('.navbar').style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
-                document.querySelector('.navbar').style.boxShadow = '0 4px 6px -1px rgba(0,0,0,0.1)';
-            } else {
-                document.querySelector('.navbar').style.backgroundColor = 'rgba(255, 255, 255, 1)';
-                document.querySelector('.navbar').style.boxShadow = 'none';
-            }
-        });
-    </script>
-</body>
-</html>
+    </section>
+{% endblock %}

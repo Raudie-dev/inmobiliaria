@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Inmobiliaria - Tu Hogar Ideal{% endblock %}</title>
+    <meta name="description" content="Encuentra tu hogar ideal con la agencia inmobiliaria líder.">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Inmobiliaria CSS -->
+    <link rel="stylesheet" href="{% static 'css/inmobiliaria.css' %}?v=1.2">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-inmobiliaria">
+        <div class="container">
+            <a class="navbar-brand-inmobiliaria" href="/">
+                <i class="bi bi-houses text-primary"></i>
+                <span>Inmobiliaria</span>
+                <span class="fs-6 fw-normal text-muted" style="margin-left:-5px;">Tu Hogar Ideal</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link-inmobiliaria {% if request.path == '/' %}active fw-bold{% endif %}" href="/">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-inmobiliaria {% if 'propiedades' in request.path %}active fw-bold{% endif %}" href="{% url 'propiedades_publica' %}">Propiedades</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-inmobiliaria" href="/#servicios">Servicios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-inmobiliaria" href="/#about">Sobre Nosotros</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main style="padding-top: 80px;">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-5 bg-white border-top mt-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <a class="navbar-brand-inmobiliaria mb-3 d-inline-block" href="/">
+                        <i class="bi bi-houses text-primary"></i>
+                        <span>Inmobiliaria</span>
+                    </a>
+                    <p class="text-muted small">Ofrecemos más que solo espacios. Entregamos experiencias que se adaptan a tu vida y tu futuro.</p>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h5 class="fw-bold mb-3 fs-6">Enlaces Rápidos</h5>
+                    <ul class="list-unstyled text-muted small">
+                        <li class="mb-2"><a href="/" class="text-muted text-decoration-none">Inicio</a></li>
+                        <li class="mb-2"><a href="{% url 'propiedades_publica' %}" class="text-muted text-decoration-none">Propiedades</a></li>
+                        <li class="mb-2"><a href="#about" class="text-muted text-decoration-none">Sobre Nosotros</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-6 col-md-4">
+                    <h5 class="fw-bold mb-3 fs-6">Contacto</h5>
+                    <ul class="list-unstyled text-muted small">
+                        <li class="mb-2"><i class="bi bi-geo-alt me-2"></i> Buenos Aires, Argentina</li>
+                        <li class="mb-2"><i class="bi bi-telephone me-2"></i> +54 (11) 1234-5678</li>
+                        <li class="mb-2"><i class="bi bi-envelope me-2"></i> hola@inmobiliaria.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-top mt-4 pt-3 text-center text-muted small">
+                &copy; 2026 Inmobiliaria Real Estate. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar-inmobiliaria');
+            if (window.scrollY > 10) {
+                navbar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
+            } else {
+                navbar.style.boxShadow = '0 1px 2px 0 rgba(0, 0, 0, 0.05)';
+            }
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

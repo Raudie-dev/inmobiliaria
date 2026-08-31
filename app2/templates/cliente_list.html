@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
-{% block title %}Clientes | CRM Inmobiliario{% endblock %}
-{% block page_title %}Listado de Clientes (Leads){% endblock %}
+{% block title %}Leads | Inmobiliaria CRM{% endblock %}
+{% block page_title %}Clientes y Leads{% endblock %}
 
 {% block content %}
-<div class="glass-card">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h5 class="fw-bold mb-0">Clientes Activos e Inactivos</h5>
-        <button class="btn btn-primary-custom" onclick="openClienteModal()">
-            <i class="fas fa-plus"></i> Nuevo Cliente
+<div class="dashboard-card">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+        <h5 class="fw-bold mb-0 font-heading">Gestión de Clientes</h5>
+        <button class="btn-inmobiliaria btn-primary-inmobiliaria py-2 px-3 fs-6" onclick="openClienteModal()">
+            <i class="bi bi-person-plus me-1"></i> Nuevo Cliente
         </button>
     </div>
 
@@ -17,44 +17,55 @@
             <thead>
                 <tr>
                     <th>Nombre</th>
-                    <th>Contacto</th>
+                    <th>Info. Contacto</th>
                     <th>Interés</th>
                     <th>Presupuesto</th>
                     <th>Estado</th>
-                    <th>Acciones</th>
+                    <th class="text-end">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {% for cliente in clientes %}
                 <tr>
-                    <td class="fw-semibold">{{ cliente.nombre }}</td>
-                    <td>
-                        <small class="d-block"><i class="fas fa-envelope text-muted"></i> {{ cliente.email }}</small>
-                        <small class="d-block"><i class="fas fa-phone text-muted"></i> {{ cliente.telefono }}</small>
+                    <td class="fw-semibold text-main">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center text-primary fw-bold" style="width: 32px; height: 32px; font-size: 0.85rem;">
+                                {{ cliente.nombre|slice:":1"|upper }}
+                            </div>
+                            {{ cliente.nombre }}
+                        </div>
                     </td>
                     <td>
-                        {{ cliente.tipo_inmueble }}<br>
-                        <small class="text-muted"><i class="fas fa-map-marker-alt"></i> {{ cliente.zona_interes }}</small>
+                        <small class="d-block text-muted mb-1"><i class="bi bi-envelope me-1"></i> {{ cliente.email }}</small>
+                        <small class="d-block text-muted"><i class="bi bi-telephone me-1"></i> {{ cliente.telefono }}</small>
                     </td>
-                    <td>${{ cliente.presupuesto_min }} - ${{ cliente.presupuesto_max }}</td>
+                    <td>
+                        <span class="fw-medium">{{ cliente.tipo_inmueble }}</span><br>
+                        <small class="text-muted"><i class="bi bi-geo-alt me-1"></i> {{ cliente.zona_interes }}</small>
+                    </td>
+                    <td class="fw-semibold font-heading">${{ cliente.presupuesto_min }} - ${{ cliente.presupuesto_max }}</td>
                     <td>
                         {% if cliente.activo %}
-                            <span class="badge bg-success">Activo</span>
+                            <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">Activo</span>
                         {% else %}
-                            <span class="badge bg-secondary">Inactivo</span>
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 px-2 py-1">Inactivo</span>
                         {% endif %}
                     </td>
-                    <td>
-                        <div class="d-flex gap-2">
-                            <button onclick="openClienteModal({{ cliente.pk }})" class="btn btn-sm btn-light border" title="Editar">
-                                <i class="fas fa-edit text-primary"></i>
+                    <td class="text-end">
+                        <div class="d-flex gap-2 justify-content-end">
+                            <button onclick="openClienteModal({{ cliente.pk }})" class="btn btn-sm btn-outline-inmobiliaria" title="Editar">
+                                <i class="bi bi-pencil"></i>
                             </button>
                         </div>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="6" class="text-center py-4 text-muted">No hay clientes registrados.</td>
+                    <td colspan="6" class="text-center py-5 text-muted">
+                        <i class="bi bi-people fs-1 mb-3 d-block text-light"></i>
+                        <h6 class="fw-semibold">No se encontraron clientes</h6>
+                        <p class="small mb-0">Comienza agregando tu primer cliente o lead.</p>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -64,18 +75,18 @@
 
 <!-- Modal -->
 <div class="modal fade" id="clienteModal" tabindex="-1" aria-labelledby="clienteModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title fw-bold" id="clienteModalLabel">Gestionar Cliente</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+      <div class="modal-header bg-light border-bottom-0 py-3">
+        <h5 class="modal-title fw-bold font-heading" id="clienteModalLabel">Gestionar Cliente</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
-      <div class="modal-body" id="clienteModalBody">
-        <div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div></div>
+      <div class="modal-body p-4" id="clienteModalBody">
+        <div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" form="clienteAjaxForm" class="btn btn-primary-custom"><i class="fas fa-save"></i> Guardar</button>
+      <div class="modal-footer bg-light border-top-0 py-3">
+        <button type="button" class="btn btn-light fw-medium" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" form="clienteAjaxForm" class="btn-inmobiliaria btn-primary-inmobiliaria py-2"><i class="bi bi-check2 me-1"></i> Guardar Cliente</button>
       </div>
     </div>
   </div>
@@ -88,7 +99,7 @@
             currentModal = new bootstrap.Modal(document.getElementById('clienteModal'));
         }
         const body = document.getElementById('clienteModalBody');
-        body.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div></div>';
+        body.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>';
         currentModal.show();
         
         const url = pk ? `/app2/api/cliente/${pk}/editar/` : `/app2/api/cliente/crear/`;
@@ -100,6 +111,13 @@
                 const form = document.getElementById('clienteAjaxForm');
                 form.setAttribute('action', url);
                 
+                // Add inmobiliaria form classes to inputs if needed
+                form.querySelectorAll('input, select, textarea').forEach(el => {
+                    if(!el.classList.contains('form-control-inmobiliaria') && !el.type.match(/checkbox|radio|hidden/)) {
+                        el.classList.add('form-control-inmobiliaria');
+                    }
+                });
+                
                 // Ejecutar scripts dentro del html inyectado si los hay
                 const scripts = body.getElementsByTagName('script');
                 for (let i = 0; i < scripts.length; i++) {
@@ -107,7 +125,7 @@
                 }
             })
             .catch(err => {
-                body.innerHTML = '<div class="alert alert-danger">Error al cargar formulario.</div>';
+                body.innerHTML = '<div class="alert alert-danger d-flex align-items-center gap-2"><i class="bi bi-exclamation-triangle"></i> Error loading form.</div>';
             });
     }
 </script>
